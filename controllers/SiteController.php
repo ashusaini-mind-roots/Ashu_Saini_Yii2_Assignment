@@ -9,7 +9,6 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\SignupForm;
-use yii\rbac\DbManager;
 use app\models\NewUser;
 
 class SiteController extends Controller
@@ -19,25 +18,7 @@ class SiteController extends Controller
      */
     public function behaviors()
     {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout'],
-                'rules' => [
-                    [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],
-        ];
+        return [];
     }
 
     /**
@@ -115,11 +96,6 @@ class SiteController extends Controller
                 if($model->save()){
                     $this->redirect(['/site/login']);
                 }
-                $role=new DbManager;
-                $role->init();
-                $newRole = $role->createRole($roles[$data['NewUser']['role']]);
-                $role->add($newRole);
-                $role->assign($newRole,$model->id);
             }
         }
         $model->username = '';
